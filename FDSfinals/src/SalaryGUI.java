@@ -15,6 +15,7 @@ public class SalaryGUI extends JFrame {
 	public static void main(String[] args) {
 		
 		System.out.println("Hello World");
+		System.out.println("Wala pa tayo nasisimulan");
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
