@@ -13,6 +13,9 @@ public class SalaryGUI extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
+		System.out.println("Hello World");
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -36,5 +39,6 @@ public class SalaryGUI extends JFrame {
 
 		setContentPane(contentPane);
 	}
-
+	
+	
 }
