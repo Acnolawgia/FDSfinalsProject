@@ -57,7 +57,7 @@ public class SalaryGUI extends JFrame {
 	 */
 	public SalaryGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 939, 480);
+		setBounds(100, 100, 940, 483);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(192, 192, 192));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
