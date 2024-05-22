@@ -116,12 +116,6 @@ public class SalaryGUI extends JFrame {
 		textField_2.setBounds(642, 16, 130, 39);
 		Employee_Panel.add(textField_2);
 		
-		JButton btnNewButton = new JButton("Log Out");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnNewButton.setEnabled(false);
-		btnNewButton.setBounds(782, 10, 117, 45);
-		Employee_Panel.add(btnNewButton);
-		
 		JPanel Rates_Panel = new JPanel();
 		Rates_Panel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		Rates_Panel.setBounds(10, 108, 292, 305);
@@ -355,5 +349,11 @@ public class SalaryGUI extends JFrame {
 		textField_6.setBackground(Color.LIGHT_GRAY);
 		textField_6.setBounds(130, 163, 136, 29);
 		panel_2.add(textField_6);
+		
+		JButton btnLogOut = new JButton("Log Out");
+		btnLogOut.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btnLogOut.setBackground(Color.LIGHT_GRAY);
+		btnLogOut.setBounds(782, 15, 117, 40);
+		Employee_Panel.add(btnLogOut);
 	}
 }
