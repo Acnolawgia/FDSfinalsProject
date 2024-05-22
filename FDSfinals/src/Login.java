@@ -144,8 +144,8 @@ public class Login extends JFrame {
 		Panel_AsLine_1.setBounds(10, 356, 222, 10);
 		panel_1.add(Panel_AsLine_1);
 		
-		JLabel WelcomeBack_Label = new JLabel("Welcom Back!");
-		WelcomeBack_Label.setBounds(10, 98, 222, 60);
+		JLabel WelcomeBack_Label = new JLabel("Welcome Back!");
+		WelcomeBack_Label.setBounds(3, 102, 238, 60);
 		panel_1.add(WelcomeBack_Label);
 		WelcomeBack_Label.setFont(new Font("Tahoma", Font.PLAIN, 35));
 		
