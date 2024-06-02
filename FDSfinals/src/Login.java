@@ -5,6 +5,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.Color;
@@ -81,14 +83,26 @@ public class Login extends JFrame {
         JButton Loginbtn = new JButton("Login");
         Loginbtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
-                boolean isAuthenticated = authenticateUser();
-                if (isAuthenticated) {
-                    System.out.println("User exists (MERON)");
+                String userType = authenticateUser();
+                if (userType != null) {
+                    if (userType.equals("admin")) {
+                        System.out.println("Welcome, Admin!");
+                        
+    					Admin frame = new Admin();
+    					frame.setVisible(true);
+                        
+                    } else if (userType.equals("employee")) {
+                        System.out.println("Welcome, Employee!");
+                        
+                        SalaryGUI frame = new SalaryGUI();
+    					frame.setVisible(true);   										  
+                    } 
+                  //  dispose();
                 } else {
-                    System.out.println("User does not exist (WALA)");
+                    System.out.println("Invalid username or password.");
+                    
+                    JOptionPane.showMessageDialog(null, "Invalid username or password.", "Login Error", JOptionPane.ERROR_MESSAGE);
                 }
-            
             }
         });
         Loginbtn.setBackground(new Color(192, 192, 192));
@@ -176,24 +190,25 @@ public class Login extends JFrame {
         Image_PeoplWaving_Label.setIcon(new ImageIcon("D:\\GitHub\\FDSfinalsProject\\FDSfinals\\Images\\PeopleWaving.png"));
         Image_PeoplWaving_Label.setBounds(-46, 0, 290, 222);
         panel_5.add(Image_PeoplWaving_Label);
-        
     }
     
-    private boolean authenticateUser() {
+    private String authenticateUser() {
         String username = UserTextField.getText();
-        String password = new String(passwordField.getPassword()); // Correctly get the password
+        String password = new String(passwordField.getPassword());
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/payrolldb?user=root")) {
-            String sql = "SELECT * FROM login WHERE username = ? AND password = ?";
+            String sql = "SELECT usertype FROM employees WHERE username = ? AND password = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, username);
                 statement.setString(2, password);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next(); // Return true if user exists, false otherwise
+                    if (resultSet.next()) {
+                        return resultSet.getString("usertype"); // Return usertype if user exists
+                    }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return null; // Return null if authentication fails
     }
 }

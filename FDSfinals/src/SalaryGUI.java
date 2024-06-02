@@ -16,7 +16,7 @@ public class SalaryGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField EmployeeID_TF;
-	private JTextField textField;
+	private JTextField EmpIDtextField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField Rates_TF;
@@ -88,11 +88,11 @@ public class SalaryGUI extends JFrame {
 		Employee_Panel.add(EmployeeID_TF);
 		EmployeeID_TF.setColumns(10);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBackground(Color.LIGHT_GRAY);
-		textField.setBounds(205, 59, 257, 39);
-		Employee_Panel.add(textField);
+		EmpIDtextField = new JTextField();
+		EmpIDtextField.setColumns(10);
+		EmpIDtextField.setBackground(Color.LIGHT_GRAY);
+		EmpIDtextField.setBounds(205, 59, 257, 39);
+		Employee_Panel.add(EmpIDtextField);
 		
 		JLabel SalaryMethod_Label = new JLabel("Salary Method:");
 		SalaryMethod_Label.setFont(new Font("Tahoma", Font.PLAIN, 25));
