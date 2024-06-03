@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class SalaryGUI2 extends JFrame {
+public class SalaryGUIEdit extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -45,7 +45,7 @@ public class SalaryGUI2 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SalaryGUI2 frame = new SalaryGUI2();
+					SalaryGUIEdit frame = new SalaryGUIEdit();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,7 +57,7 @@ public class SalaryGUI2 extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SalaryGUI2() {
+	public SalaryGUIEdit() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 940, 483);
 		contentPane = new JPanel();

@@ -10,6 +10,8 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SalaryGUI extends JFrame {
 
@@ -351,6 +353,14 @@ public class SalaryGUI extends JFrame {
 		panel_2.add(textField_6);
 		
 		JButton btnLogOut = new JButton("Log Out");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Login frame = new Login();
+                frame.setVisible(true);
+                dispose();
+			}
+		});
 		btnLogOut.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnLogOut.setBackground(Color.LIGHT_GRAY);
 		btnLogOut.setBounds(782, 15, 117, 40);

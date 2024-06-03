@@ -2,10 +2,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -21,6 +21,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Admin extends JFrame {
 
@@ -28,7 +30,6 @@ public class Admin extends JFrame {
     private JPanel contentPane;
     private JTextField UsersName_TF;
     private JTable table;
-    private HashMap<Integer, ButtonState> buttonStates = new HashMap<>();
 
     /**
      * Launch the application.
@@ -99,24 +100,32 @@ public class Admin extends JFrame {
         Buttons_Panel.setLayout(null);
 
         JButton AddAcc_Button = new JButton("Add Account");
-        AddAcc_Button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AccountCreation frame = new AccountCreation();
-                frame.setVisible(true);
-            }
-        });
         AddAcc_Button.setFont(new Font("Tahoma", Font.PLAIN, 15));
         AddAcc_Button.setBackground(new Color(192, 192, 192));
         AddAcc_Button.setBounds(10, 10, 174, 40);
         Buttons_Panel.add(AddAcc_Button);
 
         JButton DeleteAcc_Button = new JButton("Delete Account");
+        DeleteAcc_Button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                EmployeeListDelete frame = new EmployeeListDelete();
+                frame.setVisible(true);
+            }
+        });
         DeleteAcc_Button.setFont(new Font("Tahoma", Font.PLAIN, 15));
         DeleteAcc_Button.setBackground(Color.LIGHT_GRAY);
         DeleteAcc_Button.setBounds(10, 71, 174, 40);
         Buttons_Panel.add(DeleteAcc_Button);
 
         JButton LogOut_Button = new JButton("Log Out");
+        LogOut_Button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Login frame = new Login();
+                frame.setVisible(true);
+                dispose();
+            }
+        });
+
         LogOut_Button.setFont(new Font("Tahoma", Font.PLAIN, 15));
         LogOut_Button.setBackground(Color.LIGHT_GRAY);
         LogOut_Button.setBounds(10, 136, 174, 40);
@@ -156,13 +165,8 @@ public class Admin extends JFrame {
 
         // Initialize table data and column names
         String[] columnNames = {"ID", "Name", "User Type", "View", "Edit"};
-        Object[][] data = {
-            {"1", "John Doe", "Employee", "View", "Edit"},
-            {"2", "Jane Smith", "Admin", "View", "Edit"},
-            // Add more rows as needed
-        };
-
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(columnNames);
         table = new JTable(model) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -183,9 +187,9 @@ public class Admin extends JFrame {
         table.setBounds(39, 468, 589, 177);
 
         TableCellRenderer buttonRenderer = new JTableButtonRenderer();
-        TableCellEditor buttonEditor = (TableCellEditor) new JTableButtonEditor(new JCheckBox());
+        TableCellEditor buttonEditor = new JTableButtonEditor(new JCheckBox());
 
-        // Set custom renderer and editor for "Show" and "Hide" columns
+        // Set custom renderer and editor for "View" and "Edit" columns
         table.getColumnModel().getColumn(3).setCellRenderer(buttonRenderer);
         table.getColumnModel().getColumn(3).setCellEditor(buttonEditor);
         table.getColumnModel().getColumn(4).setCellRenderer(buttonRenderer);
@@ -193,12 +197,47 @@ public class Admin extends JFrame {
 
         scrollPane.setViewportView(table);
 
-        // Initialize button states for each row
-        for (int i = 0; i < data.length; i++) {
-            buttonStates.put(i, new ButtonState());
-        }
+        // Load data from database
+        loadDataFromDatabase(model);
     }
 
+    private void loadDataFromDatabase(DefaultTableModel model) {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Register JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Open a connection
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/payrolldb?user=root");
+
+            // Execute a query
+            stmt = conn.createStatement();
+            String sql = "SELECT id, CONCAT(name, ' ', lastname) AS full_name, usertype FROM employees";
+            rs = stmt.executeQuery(sql);
+
+            // Extract data from result set
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("full_name");
+                String userType = rs.getString("usertype");
+                model.addRow(new Object[]{id, name, userType, "View", "Edit"});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Clean-up environment
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private class JTableButtonRenderer implements TableCellRenderer {
         private final JButton button = new JButton();
@@ -206,12 +245,6 @@ public class Admin extends JFrame {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             button.setText((value == null) ? "" : value.toString());
-            ButtonState state = buttonStates.get(row);
-            if (column == 3) {
-                button.setEnabled(!state.isShowEnabled());
-            } else if (column == 4) {
-                button.setEnabled(!state.isHideEnabled());
-            }
             return button;
         }
     }
@@ -242,18 +275,12 @@ public class Admin extends JFrame {
         @Override
         public Object getCellEditorValue() {
             if (isPushed) {
-                String petId = table.getValueAt(row, 0).toString();
-                String action = column == 3 ? "view" : "";
+                String action = column == 3 ? "view" : "edit";
+                System.out.println("Button clicked in row " + row + " to " + action);
 
-
-                // Update button state
-                ButtonState state = buttonStates.get(row);
-                if (column == 3) {
-                    state.setShowEnabled(true);
-                    state.setHideEnabled(false);
-                } else if (column == 4) {
-                    state.setShowEnabled(false);
-                    state.setHideEnabled(true);
+                if (action.equals("view")) {
+                    SalaryGUIView frame = new SalaryGUIView();
+                    frame.setVisible(true);
                 }
             }
             isPushed = false;
@@ -271,30 +298,5 @@ public class Admin extends JFrame {
             super.fireEditingStopped();
         }
     }
-
-    private class ButtonState {
-        private boolean showEnabled;
-        private boolean hideEnabled;
-
-        public ButtonState() {
-            this.showEnabled = false;
-            this.hideEnabled = true;
-        }
-
-        public boolean isShowEnabled() {
-            return showEnabled;
-        }
-
-        public void setShowEnabled(boolean showEnabled) {
-            this.showEnabled = showEnabled;
-        }
-
-        public boolean isHideEnabled() {
-            return hideEnabled;
-        }
-
-        public void setHideEnabled(boolean hideEnabled) {
-            this.hideEnabled = hideEnabled;
-        }
-    }
 }
+

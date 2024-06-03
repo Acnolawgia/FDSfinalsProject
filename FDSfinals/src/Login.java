@@ -106,7 +106,7 @@ public class Login extends JFrame {
             }
         });
         Loginbtn.setBackground(new Color(192, 192, 192));
-        Loginbtn.setBounds(91, 269, 171, 34);
+        Loginbtn.setBounds(88, 288, 171, 34);
         panel_3.add(Loginbtn);
         Loginbtn.setFont(new Font("Tahoma", Font.BOLD, 16));
         
@@ -131,16 +131,24 @@ public class Login extends JFrame {
         panel_3.add(UserNamelbl);
         UserNamelbl.setFont(new Font("Tahoma", Font.BOLD, 16));
         
-        JLabel ForgotPassword_Label = new JLabel("Forgot Password?");
-        ForgotPassword_Label.setForeground(new Color(0, 0, 255));
-        ForgotPassword_Label.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        ForgotPassword_Label.setBounds(20, 235, 118, 24);
-        panel_3.add(ForgotPassword_Label);
-        
         JLabel LogIn_Label = new JLabel("Log In");
         LogIn_Label.setFont(new Font("Tahoma", Font.PLAIN, 50));
         LogIn_Label.setBounds(108, 10, 159, 73);
         panel_3.add(LogIn_Label);
+        
+        JButton ForgetPasswordbtn = new JButton("Forget Password?");
+        ForgetPasswordbtn.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		ForgetPassword frame = new ForgetPassword();
+                frame.setVisible(true);
+                dispose();
+        	}
+        });
+ 
+        ForgetPasswordbtn.setForeground(new Color(0, 0, 255));
+        ForgetPasswordbtn.setBounds(166, 244, 143, 24);
+        panel_3.add(ForgetPasswordbtn);
         
         JPanel panel_2 = new JPanel();
         panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -187,7 +195,7 @@ public class Login extends JFrame {
         panel_5.setLayout(null);
         
         JLabel Image_PeoplWaving_Label = new JLabel("New label");
-        Image_PeoplWaving_Label.setIcon(new ImageIcon("D:\\GitHub\\FDSfinalsProject\\FDSfinals\\Images\\PeopleWaving.png"));
+        Image_PeoplWaving_Label.setIcon(new ImageIcon("D:\\GithubRepository\\FDSfinalsProject\\FDSfinals\\Images\\PeopleWaving.png"));
         Image_PeoplWaving_Label.setBounds(-46, 0, 290, 222);
         panel_5.add(Image_PeoplWaving_Label);
     }
